@@ -25,6 +25,8 @@ Route::group(['prefix' => 'v1'], function ($route) {
 
         Route::post('export', 'ParticipantsController@export');
 
+        Route::post('import', 'CodesController@import');
+
         Route::get('download', 'ParticipantsController@getExported');
 
         Route::post('result', 'ResultController@result');

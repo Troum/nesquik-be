@@ -16,20 +16,24 @@ class ResultController extends Controller
      */
     public function result(Request $request)
     {
-        $result = Result::create([
-            'title' => $request->resultDate
-        ]);
-
-        foreach ($request->get('array') as $item) {
-            $result->winners()->create([
-               'name' => json_decode($item)->name,
-               'code' => json_decode($item)->code,
-               'game_code' => json_decode($item)->game_code,
-               'prize' => json_decode($item)->prize
+        if (isset(json_decode($request->get('array')[0])->prize)) {
+            $result = Result::create([
+                'title' => $request->resultDate
             ]);
+
+            foreach ($request->get('array') as $item) {
+                $result->winners()->create([
+                    'name' => json_decode($item)->name,
+                    'code' => json_decode($item)->code,
+                    'game_code' => json_decode($item)->game_code,
+                    'prize' => json_decode($item)->prize
+                ]);
+            }
+
+            return response()->json(['success' => 'Розыгрыш успешно добавлен'], Response::HTTP_OK);
         }
 
-        return response()->json(['success' => 'Розыгрыш успешно добавлен'], Response::HTTP_OK);
+        return response()->json(['error' => 'Проверьте, добавлен ли приз каждому победителю'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
